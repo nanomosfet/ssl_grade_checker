@@ -1,0 +1,3 @@
+graft ssl_grade_checker/templates
+graft ssl_grade_checker/static
+include ssl_grade_checker
