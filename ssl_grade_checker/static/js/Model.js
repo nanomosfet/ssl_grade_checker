@@ -1,49 +1,36 @@
 var Model = {
-    domains: [
-        {
-            id: 0,
-            domain_name: "www.example.com",
-            grade: "A+",
-            last_updated: 1490918500000,
-            status: "OK",
-            active: true
-        },
-        {
-            id: 1,
-            domain_name: "www.example_two.com",
-            grade: "B",
-            last_updated: 1499919200000,
-            status: "OK",
-            active: true
-        },
-        {
-            id: 2,
-            domain_name: "www.example_three.com",
-            grade: "N/A",
-            last_updated: 1491918400000,
-            status: "Error",
-            active: true
-        },
-        {
-            id: 3,
-            domain_name: "www.example_four.com",
-            grade: "F",
-            last_updated: 1390518400000,
-            status: "OK",
-            active: true
-        },
-        {
-            id: 4,
-            domain_name: "www.example_disabled.com",
-            grade: "F",
-            last_updated: 1480918400000,
-            status: "OK",
-            active: false
-        }
-    ],
+    init: function() {
+        this.loadDomains();
+    },
+
+    domains: [],
 
     pages: ["SSL Status", "Settings"],
 
-    currentPage: null
+    currentPage: null,
+
+    loadDomains: function() {
+        var request = new XMLHttpRequest();
+        var self = this;
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var domains_JSON = JSON.parse(this.responseText);
+                for(i = 0; i < domains_JSON.Domains.length; i++) {
+                    self.domains.push({
+                        id: domains_JSON.Domains[i].id,
+                        domain_name: domains_JSON.Domains[i].domain_name,
+                        grade: domains_JSON.Domains[i].grade,
+                        last_updated: domains_JSON.Domains[i].last_updated,
+                        status: domains_JSON.Domains[i].status,
+                        active: domains_JSON.Domains[i].active
+                    });
+                    
+                }
+                ctrl.reloadDomainLists();
+            }
+        };
+        request.open("GET", "/domains/JSON");
+        request.send();
+    }
 
 };

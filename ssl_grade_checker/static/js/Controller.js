@@ -4,8 +4,8 @@ var ctrl = {
     },
 
     init: function() {
+        Model.init();
         Model.currentPage = Model.pages[0];
-        DomainListView.render();
         NavView.render();
         PageView.renderPage();
     },
@@ -20,5 +20,10 @@ var ctrl = {
 
     setCurrentPage: function(page) {
         Model.currentPage = page;
+    },
+
+    reloadDomainLists: function() {
+        DomainListView.renderDomainList("domainTableBody");
+        DomainListView.renderConfigTable("domainConfigTableBody");
     }
 };
