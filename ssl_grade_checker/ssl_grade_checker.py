@@ -1,3 +1,5 @@
+import requests
+
 from flask import Flask, render_template, url_for, jsonify
 
 from database import init_db, db_session, drop_all
@@ -59,3 +61,8 @@ def reset_domain_data():
     db_session.commit()
     drop_all()
     return "success"
+
+@app.route('/checkSSL/<domain_name>')
+def check_ssl(domain_name):
+    r = requests.get('https://api.ssllabs.com/api/v2/analyze?host=%s' % domain_name)
+    return jsonify(r.json())

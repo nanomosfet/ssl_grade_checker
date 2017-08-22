@@ -86,10 +86,12 @@ var DomainListView = {
     },
 
     renderAddButton: function() {
-        var spanEl = document.createElement("span");
-        spanEl.setAttribute("class", "badge badge-pill badge-success");
-        spanEl.innerHTML = 'Add Domain';
-        return spanEl;
+        var buttEl = document.createElement("button");
+        buttEl.setAttribute("class", "btn btn-success");
+        buttEl.setAttribute("data-toggle", "modal");
+        buttEl.setAttribute("data-target", "#addDomainModal");
+        buttEl.innerHTML = 'Add Domain';
+        return buttEl;
     },
 
     renderConfigTable: function(tableBodyID) {
