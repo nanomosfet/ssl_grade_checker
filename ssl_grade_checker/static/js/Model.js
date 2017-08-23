@@ -14,6 +14,7 @@ var Model = {
     loadDomains: function() {
         var request = new XMLHttpRequest();
         var self = this;
+        self.domains = [];
         request.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var domains_JSON = JSON.parse(this.responseText);
@@ -55,6 +56,29 @@ var Model = {
             };
             req.send();
         }); 
+    },
+
+    addDomainFromCurrentAnalysis: function() {
+        var request = new XMLHttpRequest();
+        var self = this;
+
+        var form = new FormData();
+        form.append('domain_name', self.CurrentAnalysis.host);
+        form.append('grade', self.CurrentAnalysis.endpoints[0].grade);
+        form.append('last_updated', self.CurrentAnalysis.testTime);
+        form.append('status', 'OK');
+        form.append('active', true);
+
+        request.open('POST', '/addDomain');
+
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                self.loadDomains();
+                ctrl.reloadDomainLists();
+            }
+        }
+
+        request.send(form);
     }
 
 };

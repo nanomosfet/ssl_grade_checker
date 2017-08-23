@@ -20,11 +20,11 @@ var DomainAnalysisController = {
         }
         else if(currentAnalysis.status == "READY") {
             console.log("Analysis is complete!")
-            
+            Model.addDomainFromCurrentAnalysis();
             return true;
         }
         else if(currentAnalysis.status == "ERROR") {
-            console.log("Error occured during analysis");
+            console.log("Error occured during analysis\n Status Message is: "+currentAnalysis.statusMessage);
             return false;
         }
         else if(currentAnalysis.status == "DNS" || currentAnalysis.status == "IN_PROGRESS") {

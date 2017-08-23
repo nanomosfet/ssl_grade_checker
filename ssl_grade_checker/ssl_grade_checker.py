@@ -1,6 +1,7 @@
 import requests
+from sqlalchemy.exc import IntegrityError
 
-from flask import Flask, render_template, url_for, jsonify
+from flask import Flask, render_template, url_for, jsonify, request
 
 from database import init_db, db_session, drop_all
 from models import Domain
@@ -66,3 +67,29 @@ def reset_domain_data():
 def check_ssl(domain_name):
     r = requests.get('https://api.ssllabs.com/api/v2/analyze?host=%s' % domain_name)
     return jsonify(r.json())
+
+@app.route('/addDomain', methods=['POST'])
+def add_domain():
+    try:
+        domain = Domain(
+        domain_name=request.form['domain_name'],
+        grade=request.form['grade'],
+        last_updated=request.form['last_updated'],
+        status=request.form['status'],
+        active=request.form['active'])
+
+        db_session.add(domain);
+        db_session.commit();
+        return "success!"
+    except IntegrityError:
+        db_session.rollback()
+        # Domain already exists so just update the current one.
+        domain = db_session.query(Domain)\
+            .filter_by(domain_name=request.form['domain_name']).one()
+
+        domain.grade = request.form['grade']
+        domain.last_updated = request.form['last_updated']
+        domain.status = request.form['status']
+        domain.active = request.form['active']
+        db_session.commit()
+        return "updated previous host %s" % request.form['domain_name']
