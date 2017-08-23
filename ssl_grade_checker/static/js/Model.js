@@ -5,6 +5,8 @@ var Model = {
 
     domains: [],
 
+    CurrentAnalyzeStatus: {},
+
     pages: ["SSL Status", "Settings"],
 
     currentPage: null,
@@ -31,6 +33,28 @@ var Model = {
         };
         request.open("GET", "/domains/JSON");
         request.send();
+    },
+
+    getDomainSSL: function(domain_name) {
+        return new Promise(function(resolve, reject) {
+            var req = new XMLHttpRequest();
+            req.open('GET', '/checkSSL/' + domain_name);
+
+            req.onload = function() {
+                if (req.status == 200) {
+                    //console.log('resolved\n'+req.response);
+                    resolve(req.response);
+                } 
+                else {
+                    reject(Error(req.statusText));
+                }
+            };
+
+            req.onerror = function() {
+                reject(Error("Network Error"));
+            };
+            req.send();
+        }); 
     }
 
 };
