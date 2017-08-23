@@ -29,19 +29,10 @@ var ctrl = {
     },
 
     StartDomainAnalyze: function(domain_name) {        
-
-        
+        DomainAnalysisController.startAnalysis(domain_name);        
     },
 
-    checkAnalyzeProgress: function(response) {
-        var self = this;
-        Model.CurrentAnalyzeStatus = JSON.parse(response);
-        if (Model.AnayzeStatus.status == "READY") {
-            return AnayzeStatus.grade;
-        }
-        else if (Model.AnayzeStatus.status == "DNS" ) {
-            console.log('Status is DNS');
-            self.checkAnalyzeProgress(AnayzeStatus.host);
-        }
+    getAnalysisStatus: function() {
+        return Model.CurrentAnalyzeStatus;
     }
 };

@@ -5,7 +5,7 @@ var Model = {
 
     domains: [],
 
-    CurrentAnalyzeStatus: {},
+    CurrentAnalysis: null,
 
     pages: ["SSL Status", "Settings"],
 
