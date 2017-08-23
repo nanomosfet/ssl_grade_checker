@@ -34,5 +34,13 @@ var ctrl = {
 
     getAnalysisStatus: function() {
         return Model.CurrentAnalyzeStatus;
+    },
+
+    removeDomain: function(domain_name) {
+        Model.removeDomain(domain_name);
+    },
+
+    reEnableAnalyzeButton: function(buttonID) {
+        AnalyzeDomainView.reEnableAnalyzeButton(buttonID);
     }
 };

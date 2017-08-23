@@ -93,3 +93,10 @@ def add_domain():
         domain.active = request.form['active']
         db_session.commit()
         return "updated previous host %s" % request.form['domain_name']
+
+@app.route('/removeDomain', methods=['POST'])
+def remove_domain():
+    domain = db_session.query(Domain).filter_by(domain_name=request.form['domain_name']).one()
+    db_session.delete(domain)
+    db_session.commit()
+    return "successfully deleted domain %s" % request.form['domain_name']

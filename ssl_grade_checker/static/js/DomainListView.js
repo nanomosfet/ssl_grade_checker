@@ -72,25 +72,29 @@ var DomainListView = {
     },
 
     renderAnalyzeButton: function() {
-        var spanEl = document.createElement("span");
-        spanEl.setAttribute("class", "badge badge-pill badge-primary");
-        spanEl.innerHTML = 'Analyze';
-        return spanEl;
-    },
-
-    renderRemoveButton: function() {
-        var spanEl = document.createElement("span");
-        spanEl.setAttribute("class", "badge badge-pill badge-danger");
-        spanEl.innerHTML = 'Remove';
-        return spanEl;
-    },
-
-    renderAddButton: function() {
         var buttEl = document.createElement("button");
-        buttEl.setAttribute("class", "btn btn-success");
+        buttEl.setAttribute("class", "btn btn-primary btn-sm");
+        buttEl.innerHTML = 'Analyze';
+        return buttEl;
+    },
+
+    renderRemoveButton: function(domain_name) {
+        var buttEl = document.createElement("button");
+        buttEl.setAttribute("class", "btn btn-danger btn-sm");
+        buttEl.innerHTML = 'Remove';
+        buttEl.addEventListener('click', function() {
+            ctrl.removeDomain(domain_name);
+        });
+        return buttEl;
+    },
+
+    renderAddButton: function(domain_name) {
+        var buttEl = document.createElement("button");
+        buttEl.setAttribute("class", "btn btn-success btn-sm");
         buttEl.setAttribute("data-toggle", "modal");
         buttEl.setAttribute("data-target", "#addDomainModal");
         buttEl.innerHTML = 'Add Domain';
+        
         return buttEl;
     },
 
@@ -130,7 +134,7 @@ var DomainListView = {
             tr.appendChild(td);
 
             var td = document.createElement("td");
-            td.appendChild(this.renderRemoveButton());
+            td.appendChild(this.renderRemoveButton(domains[i].domain_name));
             tr.appendChild(td);
 
             // Append new row to table

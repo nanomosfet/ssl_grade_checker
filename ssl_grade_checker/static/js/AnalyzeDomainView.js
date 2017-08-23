@@ -6,5 +6,12 @@ var AnalyzeDomainView = {
             ctrl.StartDomainAnalyze(domain_name);
             this.disabled = true;
         });
+    },
+
+    reEnableAnalyzeButton(buttonID) {
+        var button = document.getElementById(buttonID);
+        button.disabled = false;
     }
+
+
 };

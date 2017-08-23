@@ -75,9 +75,27 @@ var Model = {
             if (this.readyState == 4 && this.status == 200) {
                 self.loadDomains();
                 ctrl.reloadDomainLists();
+                ctrl.reEnableAnalyzeButton('analyzeButton');
+                self.CurrentAnalysis = null;
             }
         }
 
+        request.send(form);
+    },
+
+    removeDomain: function(domain_name) {
+        var request = new XMLHttpRequest();
+        var self = this;
+
+        var form = new FormData();
+        form.append('domain_name', domain_name);
+        request.open('POST', '/removeDomain');
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                self.loadDomains();
+                ctrl.reloadDomainLists();
+            }
+        }
         request.send(form);
     }
 
