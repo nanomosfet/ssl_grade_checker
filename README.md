@@ -20,10 +20,8 @@ $ export FLASK_APP=ssl_grade_checker
 
 * Export your SQLAlchemy database URI and Cloud Storage Bucket environment variables:
 ```
-$ export SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://[USER]:[PASSWORD]@/[DATABASE]?host=/cloudsql/[INSTANCE NAME]
-$ export CLOUD_STORAGE_BUCKET=[BUCKET NAME]
+$ export SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://[USER]:[PASSWORD]@/[DATABASE]?host=[Your database host]
 ```
-
 5. Now you can run the server
 ```
 flask run
