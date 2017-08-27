@@ -75,7 +75,7 @@ var Model = {
             if (this.readyState == 4 && this.status == 200) {
                 self.loadDomains();
                 ctrl.reloadDomainLists();
-                ctrl.reEnableAnalyzeButton('analyzeButton');
+                ctrl.finishAnalyze();
                 self.CurrentAnalysis = null;
             }
         }

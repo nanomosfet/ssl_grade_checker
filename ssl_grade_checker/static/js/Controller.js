@@ -40,7 +40,7 @@ var ctrl = {
         Model.removeDomain(domain_name);
     },
 
-    reEnableAnalyzeButton: function(buttonID) {
-        AnalyzeDomainView.reEnableAnalyzeButton(buttonID);
+    finishAnalyze: function() {
+        AnalyzeDomainView.finishAnalyzeRender();
     }
 };

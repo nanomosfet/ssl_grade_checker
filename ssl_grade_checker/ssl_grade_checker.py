@@ -21,6 +21,7 @@ def home():
 @app.route('/domains/JSON')
 def domains_JSON():
     domains = db_session.query(Domain).all()
+    db_session.close()
     return jsonify(Domains=[i.serialize for i in domains])
 
 @app.route('/domains/addtestdata', methods=['get'])
@@ -78,8 +79,9 @@ def add_domain():
         status=request.form['status'],
         active=request.form['active'])
 
-        db_session.add(domain);
-        db_session.commit();
+        db_session.add(domain)
+        db_session.commit()
+        db_session.close()
         return "success!"
     except IntegrityError:
         db_session.rollback()
@@ -92,6 +94,7 @@ def add_domain():
         domain.status = request.form['status']
         domain.active = request.form['active']
         db_session.commit()
+        db_session.close()
         return "updated previous host %s" % request.form['domain_name']
 
 @app.route('/removeDomain', methods=['POST'])
@@ -99,4 +102,5 @@ def remove_domain():
     domain = db_session.query(Domain).filter_by(domain_name=request.form['domain_name']).one()
     db_session.delete(domain)
     db_session.commit()
+    db_session.close()
     return "successfully deleted domain %s" % request.form['domain_name']
