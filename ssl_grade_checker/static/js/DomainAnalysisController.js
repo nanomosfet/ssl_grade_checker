@@ -1,6 +1,7 @@
 var DomainAnalysisController = {
     startAnalysis: function(domain_name) {
         this.AnalysisLoop(domain_name);
+        this.initializeAnalysis();
         
     },
 
@@ -11,6 +12,7 @@ var DomainAnalysisController = {
         if(!currentAnalysis) {
             Model.getDomainSSL(domain_name).then(function(response) {
                 console.log('Starting Analysis');
+                
                 Model.CurrentAnalysis = JSON.parse(response);
                 setTimeout(function() {
                     self.AnalysisLoop(domain_name);
@@ -26,12 +28,14 @@ var DomainAnalysisController = {
         }
         else if(currentAnalysis.status == "ERROR") {
             console.log("Error occured during analysis\nStatus Message is: "+currentAnalysis.statusMessage);
+            AnalyzeDomainView.updateProgress();
             return false;
         }
         else if(currentAnalysis.status == "DNS") {
             Model.getDomainSSL(domain_name).then(function(response) {
                 Model.CurrentAnalysis = JSON.parse(response);
                 console.log('Status is'+currentAnalysis.status);
+                AnalyzeDomainView.updateProgress();
                 setTimeout(function() {
                     self.AnalysisLoop(domain_name);
                 }, 5000);
@@ -57,23 +61,44 @@ var DomainAnalysisController = {
 
     calculateCurrentPercent: function() {
         var numEndPoints = Model.CurrentAnalysis.endpoints.length;
-        var percentSum = 0;
+        
+        this.updateCurrentEndpoint();
+        var currentProgress = Model.CurrentAnalysis.endpoints[this.currentEndpoint].progress;
+        if (currentProgress < 0) {
+            currentProgress = 0;
+        }
+        return (currentProgress + 100*this.currentEndpoint)/(numEndPoints);
+    },
 
-        for (var i = 0; i < numEndPoints; i++) {
-            var endpointProgress = Model.CurrentAnalysis.endpoints[i].progress;
-            if ((endpointProgress >= 0) && (endpointProgress <= 100)) {
-                percentSum =  percentSum + endpointProgress;
-            }
+    getCurrentStatusMessage: function() {
+        if (Model.CurrentAnalysis.endpoints) {
+            return Model.CurrentAnalysis.endpoints[this.currentEndpoint].statusDetailsMessage;
+        }
+        else {
+            return Model.CurrentAnalysis.status;
+        }
+    },
 
-            if (endpointProgress  != 100) {
-                break;
+    updateCurrentEndpoint: function () {
+        if (Model.CurrentAnalysis.endpoints.length - 1 == this.currentEndpoint) {
+            // Do Nothing because were at the last endpoint
+        }
+        else {
+            for (var i = this.currentEndpoint; i < Model.CurrentAnalysis.endpoints.length; i++) {
+                if (Model.CurrentAnalysis.endpoints[i].progress == 100) {
+                    this.currentEndpoint++;
+                }
+                else {
+                    break;
+                }
             }
         }
+    },
 
-        return percentSum/(numEndPoints);
-    }
-
-
-
+    initializeAnalysis: function() {
+        this.currentEndpoint = 0;
+        AnalyzeDomainView.initAnalysis();
+    },
+    currentEndpoint: null,
 
 }

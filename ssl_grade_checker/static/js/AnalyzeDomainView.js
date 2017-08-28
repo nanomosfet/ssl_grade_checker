@@ -21,13 +21,14 @@ var AnalyzeDomainView = {
     finishAnalyzeRender: function() {
         this.reEnableAnalyzeButton('analyzeButton');
         this.emptyAnalyzeTextField('add-domain-name');
-        this.hideProgressBar('add-render-progress')
+        this.hideProgressBar('add-render-progress');
+        this.renderStatusMessage('status-message', 'Finished Analysis');
 
     },
 
     renderProgressBar: function(barID, percent) {
         var bar = document.getElementById(barID);
-        bar.style.dispay = 'flex';
+        bar.style.display = 'flex';
         if (!bar.firstChild) {
             var div = document.createElement('div');
             bar.appendChild(div);
@@ -57,10 +58,26 @@ var AnalyzeDomainView = {
     startAnalyze: function() {
         this.renderProgressBar('add-render-progress', 0);
         this.bindAnalyzeButton('analyzeButton');
+        this.renderStatusMessage('status-message', 'Starting Analysis');
     },
 
     updateProgress: function() {
-        currentAnalysis = ctrl.getAnalysisStatus();
-        this.renderProgressBar('add-render-progress', DomainAnalysisController.calculateCurrentPercent());
+        this.renderProgressBar(
+            'add-render-progress',
+            DomainAnalysisController.calculateCurrentPercent());
+        this.renderStatusMessage(
+            'status-message',
+            DomainAnalysisController.getCurrentStatusMessage());
     },
+
+    renderStatusMessage: function(statusID, message) {
+        var statusEL = document.getElementById(statusID);
+        statusEL.innerHTML = message;
+
+        
+    },
+
+    initAnalysis: function() {
+        this.renderProgressBar('add-render-progress', 0);
+    }
 };
