@@ -45,7 +45,7 @@ var DomainListView = {
 
     renderGrade: function(grade) {
         var spanEl = document.createElement("span");
-        if(grade == "A+" || grade == "A") {
+        if(grade == "A+" || grade == "A" || grade == "A-") {
             spanEl.setAttribute("class", "badge badge-pill badge-success");
             spanEl.innerHTML = grade;
         } else if (grade == "B" || grade == "C") {
@@ -71,10 +71,15 @@ var DomainListView = {
         return input;
     },
 
-    renderAnalyzeButton: function() {
+    renderAnalyzeButton: function(domain_name) {
         var buttEl = document.createElement("button");
-        buttEl.setAttribute("class", "btn btn-primary btn-sm");
+        buttEl.setAttribute("class", "btn btn-primary btn-sm analyzeButton");
         buttEl.innerHTML = 'Analyze';
+        buttEl.addEventListener('click', function() {
+            $('#addDomainModal').modal('show');
+            $('#add-domain-name').val(domain_name);
+            ctrl.StartDomainAnalyze(domain_name);
+        });
         return buttEl;
     },
 
@@ -130,7 +135,7 @@ var DomainListView = {
             tr.appendChild(td);
             
             var td = document.createElement("td");
-            td.appendChild(this.renderAnalyzeButton());
+            td.appendChild(this.renderAnalyzeButton(domains[i].domain_name));
             tr.appendChild(td);
 
             var td = document.createElement("td");

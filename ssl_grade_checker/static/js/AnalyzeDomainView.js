@@ -8,9 +8,17 @@ var AnalyzeDomainView = {
         });
     },
 
-    reEnableAnalyzeButton: function(buttonID) {
-        var button = document.getElementById(buttonID);
-        button.disabled = false;
+    reEnableAnalyzeButton: function(buttonClass) {
+        $('.'+buttonClass).each(function() {
+            $(this).prop('disabled', false);
+        });
+    },
+
+    disableAllAnalyzeButtons: function(buttonClass) {
+        $('.'+buttonClass).each(function() {
+            $(this).prop('disabled', true);
+        });
+
     },
 
     emptyAnalyzeTextField: function(textFieldID) {
@@ -56,9 +64,7 @@ var AnalyzeDomainView = {
     },
 
     startAnalyze: function() {
-        this.renderProgressBar('add-render-progress', 0);
         this.bindAnalyzeButton('analyzeButton');
-        this.renderStatusMessage('status-message', 'Starting Analysis');
     },
 
     updateProgress: function() {
@@ -79,5 +85,7 @@ var AnalyzeDomainView = {
 
     initAnalysis: function() {
         this.renderProgressBar('add-render-progress', 0);
+        this.renderStatusMessage('status-message', 'Starting Analysis');
+        this.disableAllAnalyzeButtons('analyzeButton');
     }
 };
