@@ -71,7 +71,7 @@ var DomainAnalysisController = {
     },
 
     getCurrentStatusMessage: function() {
-        if (Model.CurrentAnalysis.endpoints) {
+        if (Model.CurrentAnalysis.endpoints[this.currentEndpoint].statusDetailsMessage) {
             return Model.CurrentAnalysis.endpoints[this.currentEndpoint].statusDetailsMessage;
         }
         else {
