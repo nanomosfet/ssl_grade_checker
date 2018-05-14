@@ -1,1 +1,0 @@
-from .ssl_grade_checker import app

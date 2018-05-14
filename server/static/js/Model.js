@@ -32,14 +32,14 @@ var Model = {
                 ctrl.reloadDomainLists();
             }
         };
-        request.open("GET", "/domains/JSON");
+        request.open("GET", "domains/JSON");
         request.send();
     },
 
     getDomainSSL: function(domain_name) {
         return new Promise(function(resolve, reject) {
             var req = new XMLHttpRequest();
-            req.open('GET', '/checkSSL/' + domain_name);
+            req.open('GET', 'checkSSL/' + domain_name);
 
             req.onload = function() {
                 if (req.status == 200) {
@@ -69,7 +69,7 @@ var Model = {
         form.append('status', 'OK');
         form.append('active', true);
 
-        request.open('POST', '/addDomain');
+        request.open('POST', 'addDomain');
 
         request.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -89,7 +89,7 @@ var Model = {
 
         var form = new FormData();
         form.append('domain_name', domain_name);
-        request.open('POST', '/removeDomain');
+        request.open('POST', 'removeDomain');
         request.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 self.loadDomains();

@@ -8,6 +8,7 @@ setup(
         'flask',
         'sqlalchemy',
         'psycopg2',
-        'requests'
+        'requests',
+        'gunicorn'
     ],
 )

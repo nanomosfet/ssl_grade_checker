@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, BigInteger, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from database import Base
+from server.database import Base
 
 class Domain(Base):
     __tablename__ = 'domain'

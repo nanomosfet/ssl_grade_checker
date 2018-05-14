@@ -1,30 +1,26 @@
 import requests
 from sqlalchemy.exc import IntegrityError
 
-from flask import Flask, render_template, url_for, jsonify, request
+from flask import Flask, render_template, url_for, jsonify, request, Blueprint
 
-from database import init_db, db_session, drop_all
-from models import Domain
+from server.database import init_db, db_session, drop_all
+from server.models import Domain
 
 from datetime import datetime
 init_db()
-app = Flask(__name__)
+bp = Blueprint('bp', __name__, static_folder='static')
 
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    db_session.remove()
-
-@app.route('/')
-def home():
+@bp.route('/', methods=['get'])
+def index():
     return render_template('home.html')
 
-@app.route('/domains/JSON')
+@bp.route('/domains/JSON')
 def domains_JSON():
     domains = db_session.query(Domain).all()
     db_session.close()
     return jsonify(Domains=[i.serialize for i in domains])
 
-@app.route('/domains/addtestdata', methods=['get'])
+@bp.route('/domains/addtestdata', methods=['get'])
 def add_test_domains():
     domains = []
     domains.append(Domain(
@@ -55,7 +51,7 @@ def add_test_domains():
     db_session.commit()
     return "success"
 
-@app.route('/domains/resetdata', methods=['get'])
+@bp.route('/domains/resetdata', methods=['get'])
 def reset_domain_data():
     domains = db_session.query(Domain).all()
     for d in domains:
@@ -64,20 +60,24 @@ def reset_domain_data():
     drop_all()
     return "success"
 
-@app.route('/checkSSL/<domain_name>')
+@bp.route('/checkSSL/<domain_name>')
 def check_ssl(domain_name):
     r = requests.get('https://api.ssllabs.com/api/v2/analyze?host=%s' % domain_name)
     return jsonify(r.json())
 
-@app.route('/addDomain', methods=['POST'])
+@bp.route('/addDomain', methods=['POST'])
 def add_domain():
     try:
+        if request.form['active'] == 'true':
+            active = True
+        else:
+            active = False
         domain = Domain(
         domain_name=request.form['domain_name'],
         grade=request.form['grade'],
         last_updated=request.form['last_updated'],
         status=request.form['status'],
-        active=request.form['active'])
+        active=active)
 
         db_session.add(domain)
         db_session.commit()
@@ -97,7 +97,7 @@ def add_domain():
         db_session.close()
         return "updated previous host %s" % request.form['domain_name']
 
-@app.route('/removeDomain', methods=['POST'])
+@bp.route('/removeDomain', methods=['POST'])
 def remove_domain():
     domain = db_session.query(Domain).filter_by(domain_name=request.form['domain_name']).one()
     db_session.delete(domain)
